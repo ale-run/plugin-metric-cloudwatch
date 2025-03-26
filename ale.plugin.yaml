@@ -1,0 +1,10 @@
+name: 'plugin-metric-cloudwatch'
+version: '0.0.0'
+displayName: Metric - Cloudwatch
+description: Metric Driver for Cloudwatch 
+main: lib/index.js
+icon:
+  src: ale.svg
+  background: transparent
+  scale: 1
+  shape: square
