@@ -13,7 +13,7 @@
     "lint": "prettier --write ."
   },
   "devDependencies": {
-    "@ale-run/runtime": "latest",
+    "@ale-run/runtime": "^0.1.0-rc.0",
     "@types/node": "^22.5.1",
     "cross-env": "^7.0.2",
     "prettier": "^2.0.4",

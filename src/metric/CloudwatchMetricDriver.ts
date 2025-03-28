@@ -5,12 +5,9 @@ import { Statistic } from '@aws-sdk/client-cloudwatch';
 const logger = Logger.getLogger('app:CloudwatchMetricDriver');
 
 export class CloudwatchMetricDriver extends ClusterMetricDriver {
-
-
   private readonly cloudwatchApi: CloudwatchApi = new CloudwatchApi();
 
   public async getMetricItems(deployment: IDeployment): Promise<MetricItem[]> {
-
     return [
       {
         name: 'pod_cpu_utilization',
@@ -42,23 +39,21 @@ export class CloudwatchMetricDriver extends ClusterMetricDriver {
         title: 'pod_network_tx_bytes',
         unit: 'b'
       }
-
     ];
   }
 
   public async getMetric(deployment: IDeployment, name: string, options: MetricFilter): Promise<MetricData> {
+    logger.debug(`[METRIC][${deployment.name}]metricName=${name}`);
 
-   logger.debug(`[METRIC][${deployment.name}]metricName=${name}`);
-
-   const statObjects: AnyObject[] = deployment.stat?.objects?.filter((o) => (o.kind === 'Deployment' ? o : null));
-   if (statObjects.length === 0) {
+    const statObjects: AnyObject[] = deployment.stat?.objects?.filter((o) => (o.kind === 'Deployment' ? o : null));
+    if (statObjects.length === 0) {
       logger.warn(`[METRIC][${name}]deploymentName=${deployment.name} MetricObjects not found!`);
       return;
-   }
+    }
 
-   const statObject = statObjects[0];
+    const statObject = statObjects[0];
 
-    // ContainerInsight에서 DeploymentName은 POD_NAME, PodName은 FULL_POD_Name으로 
+    // ContainerInsight에서 DeploymentName은 POD_NAME, PodName은 FULL_POD_Name으로
     // [
     //   { kind: 'Namespace', name: 'ale-ns-m5bs2ldc8abcdefg' },
     //   {
@@ -78,12 +73,11 @@ export class CloudwatchMetricDriver extends ClusterMetricDriver {
     //   }
     // ]
 
-       
-    const clusterName = this.cluster.env.EKS_CLUSTER_NAME
+    const clusterName = this.cluster.env.EKS_CLUSTER_NAME;
     const region = this.cluster.env.EKS_REGION;
-    
+
     logger.info(`[METRIC][${deployment.name}]metricName=${name} statObject=`, statObject);
-    
+
     let metricData: MetricData;
 
     switch (name) {
@@ -104,8 +98,5 @@ export class CloudwatchMetricDriver extends ClusterMetricDriver {
 
     logger.info(`[METRIC]`, metricData);
     return metricData;
-    
   }
-
-
 }

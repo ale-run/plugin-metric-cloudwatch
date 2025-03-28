@@ -1,43 +1,35 @@
 import { AnyObject, Logger, MetricData, MetricFilter } from '@ale-run/runtime';
 import { CloudWatchClient, Datapoint, Dimension, GetMetricStatisticsCommand, GetMetricStatisticsCommandInput, StandardUnit, Statistic } from '@aws-sdk/client-cloudwatch';
 
-
 const logger = Logger.getLogger('app:CloudwatchApi');
 
 export class CloudwatchApi {
-
-
-
   /**
-   * 
-   * @param metricName 
-   * @param statistic 
-   * @param region 
-   * @param clusterName 
-   * @param namespace 
-   * @param podName 
-   * @param options 
-   * @returns 
+   *
+   * @param metricName
+   * @param statistic
+   * @param region
+   * @param clusterName
+   * @param namespace
+   * @param podName
+   * @param options
+   * @returns
    */
-   public async getMetricData(metricName: string, statistic: Statistic, region: string, clusterName: string, namespace: string, podName: string, options: MetricFilter): Promise<MetricData> {
-
+  public async getMetricData(metricName: string, statistic: Statistic, region: string, clusterName: string, namespace: string, podName: string, options: MetricFilter): Promise<MetricData> {
     // Region
     // ClusterName
     // Namespace
     // PodName
     const input = this.getCommandInput(metricName, [statistic], clusterName, namespace, podName, options);
     const datapoints = await this.getMetricStatistics(region, input);
-    return this.toMetricData(podName, datapoints)
+    return this.toMetricData(podName, datapoints);
   }
 
-
   public async getMetricStatistics(region: string, input: GetMetricStatisticsCommandInput): Promise<Datapoint[]> | undefined {
-
     logger.debug('[getMetricStatistics]input=', input);
     const client = this.getClient(region);
 
     try {
-
       const command = new GetMetricStatisticsCommand(input);
       const response = await client.send(command);
       logger.debug('[getMetricStatistics]metadata=', response.$metadata);
@@ -49,18 +41,15 @@ export class CloudwatchApi {
           return a.Timestamp.getTime() - b.Timestamp.getTime();
         });
       }
-
     } catch (err) {
-      logger.error('getMetricStatistics Error ===============================================')
-      logger.error(input)
-      logger.error(err)
-
+      logger.error('getMetricStatistics Error ===============================================');
+      logger.error(input);
+      logger.error(err);
     } finally {
       client.destroy();
     }
 
     return undefined;
-
 
     // { // GetMetricStatisticsOutput
     //   Label: "STRING_VALUE",
@@ -84,31 +73,33 @@ export class CloudwatchApi {
   private getClient(region: string): CloudWatchClient {
     const config = {
       region
-    }
-    const client = new CloudWatchClient(config)
+    };
+    const client = new CloudWatchClient(config);
     return client;
-
   }
 
-  private getCommandInput(metricName: string, statistics: Statistic[], clusterName:string, namespce:string, podName: string, options: MetricFilter): GetMetricStatisticsCommandInput {
-
-    const input = { // GetMetricStatisticsInput
+  private getCommandInput(metricName: string, statistics: Statistic[], clusterName: string, namespce: string, podName: string, options: MetricFilter): GetMetricStatisticsCommandInput {
+    const input = {
+      // GetMetricStatisticsInput
       Namespace: 'ContainerInsights', // required
       MetricName: metricName, // required
-      Dimensions: [ // Dimensions
-        { // Dimension
+      Dimensions: [
+        // Dimensions
+        {
+          // Dimension
           Name: 'ClusterName', // required
-          Value: clusterName, // required
+          Value: clusterName // required
         },
-        { // Dimension
+        {
+          // Dimension
           Name: 'Namespace', // required
-          Value: namespce, // required
+          Value: namespce // required
         },
-        { // Dimension
+        {
+          // Dimension
           Name: 'PodName', // required
-          Value: podName, // required
-        },
-
+          Value: podName // required
+        }
       ],
       StartTime: options.from, // required
       EndTime: options.to, // required
@@ -116,7 +107,7 @@ export class CloudwatchApi {
       // Statistics: [ // Statistics
       //   "Average" || "Sum" || "Minimum" || "Maximum",
       // ],
-      Statistics: statistics,
+      Statistics: statistics
       // ExtendedStatistics: [ // ExtendedStatistics
       //   "STRING_VALUE",
       // ],
@@ -125,14 +116,12 @@ export class CloudwatchApi {
     };
 
     return input;
-
   }
 
   private toPeriod(unit: string) {
-
     const regex = new RegExp('([0-9]{0,2})(m|h|d)');
     const match = regex.exec(unit);
-    const time: number = (match[1] !== '' ? Number(match[1]) : 1);
+    const time: number = match[1] !== '' ? Number(match[1]) : 1;
     const timeUnit = match[2];
 
     switch (timeUnit) {
@@ -143,13 +132,11 @@ export class CloudwatchApi {
       case 'd':
         return time * 24 * 60 * 60;
       default:
-        return 10 * 60
+        return 10 * 60;
     }
-
   }
 
   private toMetricData(identifier: string, datapoints: Datapoint[]) {
-
     if (datapoints === undefined || datapoints.length === 0) return;
 
     const dates = [];
@@ -169,21 +156,19 @@ export class CloudwatchApi {
       } else {
         values.push(0);
       }
-
     }
 
     const item = {
       name: identifier,
       values
-    }
+    };
 
     const metricData = {
       total: dates.length,
       dates,
       series: [item]
-    }
+    };
 
     return metricData;
   }
-
 }

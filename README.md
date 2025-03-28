@@ -30,36 +30,36 @@ This driver enables you to monitor CloudWatch-collected metrics for services dep
 
 1. Clone the project repository.
 
-    ```bash
-    git clone https://github.com/ale-run/plugin-metric-cloudwatch.git
-    ```
+   ```bash
+   git clone https://github.com/ale-run/plugin-metric-cloudwatch.git
+   ```
 
 2. Navigate to the project directory and run the npm installation command.
 
-    ```bash
-    cd plugin-metric-cloudwatch
-    npm i
-    ```
+   ```bash
+   cd plugin-metric-cloudwatch
+   npm i
+   ```
 
 3. Run Ale with the built-in Ale Plugin for AWS CloudWatch.
 
-    ```bash
-    npm run dev
-    ```
+   ```bash
+   npm run dev
+   ```
 
 4. Select the target cluster for Ale.
 
-    ```bash
-    ? Select a Kubernetes context: (Use arrow keys)
-      No Cluster Selected 
-      orbstack 
-    ❯ docker-desktop 
-    (Move up and down to reveal more choices)
-    ```
+   ```bash
+   ? Select a Kubernetes context: (Use arrow keys)
+     No Cluster Selected
+     orbstack
+   ❯ docker-desktop
+   (Move up and down to reveal more choices)
+   ```
 
 5. Access via the following address.
 
-    - <http://localhost:9001>
+   - <http://localhost:9001>
 
 ### ⚙️ Configuration
 
