@@ -34,6 +34,6 @@ jspm_packages
 
 buildpath.js
 .test/
-/.iconcache
-/.plugins
+/.ale
+/dist
 /lib
