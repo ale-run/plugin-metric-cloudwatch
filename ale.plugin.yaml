@@ -1,10 +1,14 @@
-name: 'plugin-metric-cloudwatch'
-version: '0.0.0'
+name: '@ale-run/plugin-metric-cloudwatch'
+version: '0.1.0'
 displayName: Metric - Cloudwatch
 description: Metric Driver for Cloudwatch
+license: Apache-2.0
+author: ale
+homepage: https://ale.run
+repository: ale-run/plugin-metric-cloudwatch
 main: lib/index.js
 icon:
-  src: ale.svg
+  src: logo.svg
   background: transparent
-  scale: 1
+  scale: 0.85
   shape: square

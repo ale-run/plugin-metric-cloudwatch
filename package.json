@@ -1,5 +1,5 @@
 {
-  "name": "plugin-metric-cloudwatch",
+  "name": "@ale-run/plugin-metric-cloudwatch",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "description": "Ale Plugin Metric Cloudwatch",
